@@ -49,7 +49,7 @@ export const loginCustomer = async (req, reply) => {
   }
 };
 
-export const loginDeliveryCustomer = async (req, reply) => {
+export const loginDeliveryPartner = async (req, reply) => {
   try {
     const { email, password } = req.body;
     let deliveryPartner = await DeliveryPartner.findOne({ email });
@@ -110,8 +110,8 @@ export const refreshToken = async (req, reply) => {
 };
 
 export const fetchUser = async (req, reply) => {
-    try {
-    const {userId, role} = req.body;
+  try {
+    const { userId, role } = req.body;
     let user;
 
     if (role === "Customer") {
@@ -125,7 +125,7 @@ export const fetchUser = async (req, reply) => {
     if (!user) {
       return reply.status(403).send({ message: "User not found" });
     }
-    
+
     return reply.send({
       message: "User fetched successfuly",
       user,
@@ -133,4 +133,4 @@ export const fetchUser = async (req, reply) => {
   } catch (error) {
     return reply.status(500).send({ message: "An error accured", error });
   }
-}
+};

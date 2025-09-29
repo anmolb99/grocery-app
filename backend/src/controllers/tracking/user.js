@@ -1,5 +1,4 @@
-import { Customer } from "../../models/user.js";
-import { DeliveryPartner } from "../../models/user.js";
+import { Customer, DeliveryPartner } from "../../models/user.js";
 
 export const updateUser = async (req, reply) => {
   try {
@@ -13,29 +12,31 @@ export const updateUser = async (req, reply) => {
     if (!user) {
       return reply.status(404).send({ message: "User not found" });
     }
-
-    let UserModal;
+    let userModel;
 
     if (user.role === "Customer") {
-      UserModal = Customer;
+      userModel = user;
     } else if (user.role === "DeliveryPartner") {
-      UserModal = DeliveryPartner;
+      userModel = user;
     } else {
-      return reply.status(403).send({ message: "Invalid User Role" });
+      return reply.status(400).send({ message: "Invalid user role" });
     }
 
-    const updatedUser = UserModal.findByIdAndUpdate(
+    const updatedUser = userModel.findByIdAndUpdate(
       userId,
       { $set: updateData },
-      { new: true, runVaidators: true }
+      { new: true, runValidators: true }
     );
 
     if (!updatedUser) {
       return reply.status(404).send({ message: "User not found" });
     }
+
     return reply.send({
-      message: "User updated successfully",
+      message: "User Updated",
       user: updatedUser,
     });
-  } catch (error) {}
+  } catch (error) {
+    return reply.status(500).send({ message: "Failed to update user", error });
+  }
 };
